@@ -10,21 +10,24 @@ router.get('/nft-list/:address/:collectionName', async (req, res) => {
 
   let holder_address = req.params.address;//'0x516f33eddd97b058868347d215392fd5bf20b223beadcd89ac62628ac7cad6c1';
   let collectionName = req.params.collectionName;
-  let tokens=[];
-  for(i=0; i<10; i++){
+
+  const promises = [];
+  for(i=0; i<15; i++){
     try{
-      const tokenData = await tokenClient.getTokenData(holder_address, collectionName, i.toString());
+      promises.push(await tokenClient.getTokenData(holder_address, collectionName, i.toString()));
+      // console.log(i);
+      // const tokenData = await tokenClient.getTokenData(holder_address, collectionName, i.toString());
       // console.log(tokenData.description)
-      tokens.push(tokenData);
+      // tokens.push(tokenData);
   
     }catch (err) {
-      // console.error(err);
+      console.error(err);
     }
   }
+  const resP = await Promise.all(promises);
+  // console.log(resP);
   
-  // console.log(tokens);
-  
-  res.send(tokens);
+  res.send(resP);
 })
 
 
