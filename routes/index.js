@@ -3,7 +3,7 @@ var router = express.Router();
 
 var aptos = require('aptos');
 
-//지갑알아야됨 //
+
 router.get('/nft-list/:address/:collectionName', async (req, res) => {
   const client = new aptos.AptosClient("https://fullnode.devnet.aptoslabs.com");
   const tokenClient = new aptos.TokenClient(client); // <:!:section_1b
@@ -26,6 +26,23 @@ router.get('/nft-list/:address/:collectionName', async (req, res) => {
   
   res.send(tokens);
 })
+
+
+
+router.get('/get-apt/:address/:fee', async (req, res) => {
+  const NODE_URL = "https://fullnode.devnet.aptoslabs.com";
+  const FAUCET_URL = "https://faucet.devnet.aptoslabs.com";
+
+  const receiver = req.params.address;
+  const fee = req.params.fee;
+
+
+  const faucetClient = new aptos.FaucetClient(NODE_URL, FAUCET_URL); 
+  await faucetClient.fundAccount(receiver, fee); //100_000_000 = 1APT
+
+  res.send(true);
+
+});
 
 
 /* GET home page. */
